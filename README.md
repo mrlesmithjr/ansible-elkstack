@@ -106,7 +106,7 @@ Dependencies
 #####mrlesmithjr.elk-haproxy https://galaxy.ansible.com/list#/roles/4663
 #####mrlesmithjr.elk-kibana https://galaxy.ansible.com/list#/roles/4631
 #####mrlesmithjr.elk-pre-processor https://galaxy.ansible.com/list#/roles/4671
-#####mrlesmithjr.elk-processor https://galaxy.ansible.com/list#/roles/4676
+##### mrlesmithjr.elk-processor https://galaxy.ansible.com/list#/roles/4676
 
 Example Playbook
 ----------------
