@@ -29,6 +29,11 @@ group_vars/all/network
 ---
 pri_domain_name: vagrant.local
 ````
+group_vars/all/servers
+````
+---
+logstash_server_fqdn: 10.0.15.100
+````
 group_vars/all/snmp
 ````
 ---
@@ -41,7 +46,7 @@ group_vars/all/syslog
 ---
 configure_rsyslog: true
 syslog_servers:
-  - name: 10.0.15.100
+  - name: '{{ logstash_server_fqdn }}'
     proto: tcp
     port: 514
 ````
@@ -87,7 +92,6 @@ es_cluster_name: vagrant
 es_cluster_setup: true
 es_network_publish_host: _eth1:ipv4_
 es_min_master_nodes: 2
-logstash_server_fqdn: 10.0.15.100
 redis_allow_remote_connections: true
 vagrant_deployment: true
 ````
