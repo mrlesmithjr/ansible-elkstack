@@ -12,12 +12,12 @@ ansible-galaxy install mrlesmithjr.elkstack
 ````
 
 You will need to define variables for each role that makes up this package after installing.
-#####mrlesmithjr.elk-broker https://galaxy.ansible.com/list#/roles/4643
-#####mrlesmithjr.elk-es https://galaxy.ansible.com/list#/roles/4644
-#####mrlesmithjr.elk-haproxy https://galaxy.ansible.com/list#/roles/4663
-#####mrlesmithjr.elk-kibana https://galaxy.ansible.com/list#/roles/4631
-#####mrlesmithjr.elk-pre-processor https://galaxy.ansible.com/list#/roles/4671
-#####mrlesmithjr.elk-processor https://galaxy.ansible.com/list#/roles/4676
+#####mrlesmithjr.elk-broker https://galaxy.ansible.com/detail#/role/4643
+#####mrlesmithjr.elk-es https://galaxy.ansible.com/detail#/role/4644
+#####mrlesmithjr.elk-haproxy https://galaxy.ansible.com/detail#/role/4663
+#####mrlesmithjr.elk-kibana https://galaxy.ansible.com/detail#/role/4631
+#####mrlesmithjr.elk-pre-processor https://galaxy.ansible.com/detail#/role/4671
+#####mrlesmithjr.elk-processor https://galaxy.ansible.com/detail#/role/4676
 
 Role Variables
 --------------
