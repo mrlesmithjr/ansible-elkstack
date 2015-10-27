@@ -142,37 +142,63 @@ elk-processor-[1:2]
 playbook.yml
 ````
 ---
-- hosts: all
+- name: Configure Common Roles on ELK-Nodes
+  hosts: elk-nodes
+  remote_user: remote
   sudo: true
   roles:
-    - mrlesmithjr.bootstrap
     - mrlesmithjr.ntp
+    - mrlesmithjr.postfix
     - mrlesmithjr.rsyslog
+    - mrlesmithjr.snmpd
     - mrlesmithjr.timezone
 
-- hosts: elk-broker-nodes
+- name: Configure ELK-Broker-Nodes
+  hosts: elk-broker-nodes
+  remote_user: remote
   sudo: true
   roles:
+    - { role: mrlesmithjr.redis, when: use_redis }
+    - { role: mrlesmithjr.rabbitmq, when: use_rabbitmq }
+    - { role: mrlesmithjr.elasticsearch }
+    - { role: mrlesmithjr.elk-kibana }
     - mrlesmithjr.elk-broker
 
-- hosts: elk-es-nodes
+- name: Configure ELK-ES-Nodes
+  hosts: elk-es-nodes
+  remote_user: remote
   sudo: true
   roles:
+    - { role: mrlesmithjr.elasticsearch }
     - mrlesmithjr.elk-es
 
-- hosts: elk-processor-nodes
+- name: Configure ELK-Processor-Nodes
+  hosts: elk-processor-nodes
+  remote_user: remote
   sudo: true
   roles:
+    - { role: mrlesmithjr.elasticsearch }
+    - { role: mrlesmithjr.logstash }
+    - { role: mrlesmithjr.dnsmasq }
     - mrlesmithjr.elk-processor
 
-- hosts: elk-pre-processor-nodes
+- name: Configure ELK-Pre-Processor-Nodes
+  hosts: elk-pre-processor-nodes
+  remote_user: remote
   sudo: true
   roles:
+    - { role: mrlesmithjr.logstash }
+    - { role: mrlesmithjr.dnsmasq }
     - mrlesmithjr.elk-pre-processor
 
-- hosts: elk-haproxy-nodes
+- name: Configure ELK-Haproxy-Nodes
+  hosts: elk-haproxy-nodes
+  remote_user: remote
   sudo: true
   roles:
+    - { role: mrlesmithjr.logstash }
+    - { role: mrlesmithjr.keepalived }
+    - { role: mrlesmithjr.haproxy }
     - mrlesmithjr.elk-haproxy
 ````
 
