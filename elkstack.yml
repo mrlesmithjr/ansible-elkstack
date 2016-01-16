@@ -1,0 +1,37 @@
+---
+# Playbook to install ELKStack specific roles to configure environment...Run elkstack-core.yml to initially provision environment and/or update core roles.
+- name: Configure ELK-Broker-Nodes
+  hosts: elk-broker-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-kibana
+    - role: ansible-elk-broker
+
+- name: Configure ELK-ES-Nodes
+  hosts: elk-es-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-es
+
+- name: Configure ELK-Processor-Nodes
+  hosts: elk-processor-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-processor
+
+- name: Configure ELK-Pre-Processor-Nodes
+  hosts: elk-pre-processor-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-pre-processor
+
+- name: Configure ELK-Haproxy-Nodes
+  hosts: elk-haproxy-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-haproxy

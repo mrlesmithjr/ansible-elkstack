@@ -5,19 +5,30 @@ Downloads all roles required to build a complete ELK-Stack.
 
 Requirements
 ------------
+To install all required roles execute the following:
+````
+ansible-galaxy install -r requirements.yml
+````
+You may need to force the install or ignore errors if the existing role(s) is installed. To ensure you have the latest versions of roles.
+To ensure that you do not overwrite any existing roles installed in /etc/ansible/roles I would create comment out the roles_path in the included
+ansible.cfg file to store roles in the directory of this role.
+
+ansible.cfg
+````
+[defaults]
+ansible_managed=Ansible managed, do not edit directly: {file} by {uid} on {host}
+ask_vault_pass = False
+#gathering = smart
+#fact_caching = redis
+#fact_caching_timeout = 86400
+forks=10
+host_key_checking=False
+#roles_path = ./roles
+````
 
 Install
-````
-ansible-galaxy install mrlesmithjr.elkstack
-````
+-------
 
-You will need to define variables for each role that makes up this package after installing.
-#####mrlesmithjr.elk-broker https://galaxy.ansible.com/detail#/role/4643
-#####mrlesmithjr.elk-es https://galaxy.ansible.com/detail#/role/4644
-#####mrlesmithjr.elk-haproxy https://galaxy.ansible.com/detail#/role/4663
-#####mrlesmithjr.elk-kibana https://galaxy.ansible.com/detail#/role/4631
-#####mrlesmithjr.elk-pre-processor https://galaxy.ansible.com/detail#/role/4671
-#####mrlesmithjr.elk-processor https://galaxy.ansible.com/detail#/role/4676
 
 Role Variables
 --------------
@@ -105,12 +116,7 @@ es_master_node: false
 Dependencies
 ------------
 
-#####mrlesmithjr.elk-broker https://galaxy.ansible.com/list#/roles/4643
-#####mrlesmithjr.elk-es https://galaxy.ansible.com/list#/roles/4644
-#####mrlesmithjr.elk-haproxy https://galaxy.ansible.com/list#/roles/4663
-#####mrlesmithjr.elk-kibana https://galaxy.ansible.com/list#/roles/4631
-#####mrlesmithjr.elk-pre-processor https://galaxy.ansible.com/list#/roles/4671
-##### mrlesmithjr.elk-processor https://galaxy.ansible.com/list#/roles/4676
+All dependencies are installed from above using requirements.yml.
 
 Example Playbook
 ----------------
@@ -139,67 +145,105 @@ elk-pre-processor-[1:2]
 [elk-processor-nodes]
 elk-processor-[1:2]
 ````
-playbook.yml
+elkstack-core.yml
 ````
 ---
+# Playbook to provion core ELKStack components...Only required on initial provisioning and/or role updates
 - name: Configure Common Roles on ELK-Nodes
   hosts: elk-nodes
   remote_user: remote
   sudo: true
   roles:
-    - mrlesmithjr.ntp
-    - mrlesmithjr.postfix
-    - mrlesmithjr.rsyslog
-    - mrlesmithjr.snmpd
-    - mrlesmithjr.timezone
+    - role: ansible-network-tweaks
+    - role: ansible-ntp
+    - role: ansible-postfix
+    - role: ansible-rsyslog
+    - role: ansible-snmpd
+    - role: ansible-timezone
 
 - name: Configure ELK-Broker-Nodes
   hosts: elk-broker-nodes
   remote_user: remote
   sudo: true
   roles:
-    - { role: mrlesmithjr.redis, when: use_redis }
-    - { role: mrlesmithjr.rabbitmq, when: use_rabbitmq }
-    - { role: mrlesmithjr.elasticsearch }
-    - { role: mrlesmithjr.elk-kibana }
-    - mrlesmithjr.elk-broker
+    - role: ansible-redis
+      when: use_redis is defined and use_redis
+    - role: ansible-rabbitmq
+      when: use_rabbitmq is defined and use_rabbitmq
+    - role: ansible-elasticsearch
 
 - name: Configure ELK-ES-Nodes
   hosts: elk-es-nodes
   remote_user: remote
   sudo: true
   roles:
-    - { role: mrlesmithjr.elasticsearch }
-    - mrlesmithjr.elk-es
+    - role: ansible-elasticsearch
 
 - name: Configure ELK-Processor-Nodes
   hosts: elk-processor-nodes
   remote_user: remote
   sudo: true
   roles:
-    - { role: mrlesmithjr.elasticsearch }
-    - { role: mrlesmithjr.logstash }
-    - { role: mrlesmithjr.dnsmasq }
-    - mrlesmithjr.elk-processor
+    - role: ansible-elasticsearch
+    - role: ansible-logstash
+    - role: ansible-dnsmasq
 
 - name: Configure ELK-Pre-Processor-Nodes
   hosts: elk-pre-processor-nodes
   remote_user: remote
   sudo: true
   roles:
-    - { role: mrlesmithjr.logstash }
-    - { role: mrlesmithjr.dnsmasq }
-    - mrlesmithjr.elk-pre-processor
+    - role: ansible-logstash
+    - role: ansible-dnsmasq
 
 - name: Configure ELK-Haproxy-Nodes
   hosts: elk-haproxy-nodes
   remote_user: remote
   sudo: true
   roles:
-    - { role: mrlesmithjr.logstash }
-    - { role: mrlesmithjr.keepalived }
-    - { role: mrlesmithjr.haproxy }
-    - mrlesmithjr.elk-haproxy
+    - role: ansible-logstash
+    - role: ansible-keepalived
+    - role: ansible-haproxy
+````
+elkstack.yml
+````
+---
+# Playbook to install ELKStack specific roles to configure environment...Run elkstack-core.yml to initially provision environment and/or update core roles.
+- name: Configure ELK-Broker-Nodes
+  hosts: elk-broker-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-kibana
+    - role: ansible-elk-broker
+
+- name: Configure ELK-ES-Nodes
+  hosts: elk-es-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-es
+
+- name: Configure ELK-Processor-Nodes
+  hosts: elk-processor-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-processor
+
+- name: Configure ELK-Pre-Processor-Nodes
+  hosts: elk-pre-processor-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-pre-processor
+
+- name: Configure ELK-Haproxy-Nodes
+  hosts: elk-haproxy-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elk-haproxy
 ````
 
 License

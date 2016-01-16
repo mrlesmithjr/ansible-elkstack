@@ -1,0 +1,57 @@
+---
+# Playbook to provion core ELKStack components...Only required on initial provisioning and/or role updates
+- name: Configure Common Roles on ELK-Nodes
+  hosts: elk-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-network-tweaks
+    - role: ansible-ntp
+    - role: ansible-postfix
+    - role: ansible-rsyslog
+    - role: ansible-snmpd
+    - role: ansible-timezone
+
+- name: Configure ELK-Broker-Nodes
+  hosts: elk-broker-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-redis
+      when: use_redis is defined and use_redis
+    - role: ansible-rabbitmq
+      when: use_rabbitmq is defined and use_rabbitmq
+    - role: ansible-elasticsearch
+
+- name: Configure ELK-ES-Nodes
+  hosts: elk-es-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elasticsearch
+
+- name: Configure ELK-Processor-Nodes
+  hosts: elk-processor-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-elasticsearch
+    - role: ansible-logstash
+    - role: ansible-dnsmasq
+
+- name: Configure ELK-Pre-Processor-Nodes
+  hosts: elk-pre-processor-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-logstash
+    - role: ansible-dnsmasq
+
+- name: Configure ELK-Haproxy-Nodes
+  hosts: elk-haproxy-nodes
+  remote_user: remote
+  sudo: true
+  roles:
+    - role: ansible-logstash
+    - role: ansible-keepalived
+    - role: ansible-haproxy
