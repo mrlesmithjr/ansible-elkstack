@@ -17,8 +17,8 @@ Vagrant.configure(2) do |config|
     end
     elkbroker.vm.provision :shell, path: "provision.sh", keep_color: "true"
     elkbroker.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
-    elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elkbroker-nodes"'
-    elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elkbroker-nodes"'
+    elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-broker-nodes"'
+    elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-broker-nodes"'
   end
   config.vm.define "elkes" do |elkes|
     elkes.vm.box = "mrlesmithjr/trusty64"
@@ -32,7 +32,7 @@ Vagrant.configure(2) do |config|
     end
     elkes.vm.provision :shell, path: "provision.sh", keep_color: "true"
     elkes.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
-    elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elkes-nodes"'
-    elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elkes-nodes"'
+    elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-es-nodes"'
+    elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-es-nodes"'
   end
 end
