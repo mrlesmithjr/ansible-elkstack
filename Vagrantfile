@@ -6,9 +6,9 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
-  config.vm.define "elkbroker" do |elkbroker|
+  config.vm.define "elk-broker" do |elkbroker|
     elkbroker.vm.box = "mrlesmithjr/trusty64"
-    elkbroker.vm.hostname = "elkbroker"
+    elkbroker.vm.hostname = "elk-broker"
 
     elkbroker.vm.network :private_network, ip: "192.168.202.200"
 
@@ -20,9 +20,9 @@ Vagrant.configure(2) do |config|
     elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-broker-nodes"'
     elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-broker-nodes"'
   end
-  config.vm.define "elkes" do |elkes|
+  config.vm.define "elk-es" do |elkes|
     elkes.vm.box = "mrlesmithjr/trusty64"
-    elkes.vm.hostname = "elkes"
+    elkes.vm.hostname = "elk-es"
 
     elkes.vm.network :private_network, ip: "192.168.202.201"
     elkes.vm.network "forwarded_port", guest: 9200, host: 9200
@@ -34,5 +34,33 @@ Vagrant.configure(2) do |config|
     elkes.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
     elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-es-nodes"'
     elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-es-nodes"'
+  end
+  config.vm.define "elk-pre-processor" do |elkpreprocessor|
+    elkpreprocessor.vm.box = "mrlesmithjr/trusty64"
+    elkpreprocessor.vm.hostname = "elk-pre-processor"
+
+    elkpreprocessor.vm.network :private_network, ip: "192.168.202.202"
+
+    elkpreprocessor.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+    end
+    elkpreprocessor.vm.provision :shell, path: "provision.sh", keep_color: "true"
+    elkpreprocessor.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
+    elkpreprocessor.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-pre-processor-nodes"'
+    elkpreprocessor.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-pre-processor-nodes"'
+  end
+  config.vm.define "elk-processor" do |elkprocessor|
+    elkprocessor.vm.box = "mrlesmithjr/trusty64"
+    elkprocessor.vm.hostname = "elk-processor"
+
+    elkprocessor.vm.network :private_network, ip: "192.168.202.203"
+
+    elkprocessor.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+    end
+    elkprocessor.vm.provision :shell, path: "provision.sh", keep_color: "true"
+    elkprocessor.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
+    elkprocessor.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-processor-nodes"'
+    elkprocessor.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-processor-nodes"'
   end
 end
