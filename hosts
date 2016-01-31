@@ -1,9 +1,9 @@
 [elk-nodes]
-elk-broker  ansible_ssh_host=192.168.202.200  ansible_ssh_private_key_file=.vagrant/machines/elk-broker/virtualbox/private_key
-elk-es  ansible_ssh_host=192.168.202.201  ansible_ssh_private_key_file=.vagrant/machines/elk-es/virtualbox/private_key
+elkbroker  ansible_ssh_host=192.168.202.200  ansible_ssh_private_key_file=.vagrant/machines/elk-broker/virtualbox/private_key
+elkes  ansible_ssh_host=192.168.202.201  ansible_ssh_private_key_file=.vagrant/machines/elk-es/virtualbox/private_key
 
 [elk-broker-nodes]
-elk-broker
+elkbroker
 
 [elk-es-nodes]
-elk-es
+elkes

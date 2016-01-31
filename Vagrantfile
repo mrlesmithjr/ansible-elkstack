@@ -6,33 +6,33 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
-  config.vm.define "elk-broker" do |elk-broker|
-    elk-broker.vm.box = "mrlesmithjr/trusty64"
-    elk-broker.vm.hostname = "elk-broker"
+  config.vm.define "elkbroker" do |elkbroker|
+    elkbroker.vm.box = "mrlesmithjr/trusty64"
+    elkbroker.vm.hostname = "elkbroker"
 
-    elk-broker.vm.network :private_network, ip: "192.168.202.200"
+    elkbroker.vm.network :private_network, ip: "192.168.202.200"
 
-    elk-broker.vm.provider "virtualbox" do |vb|
+    elkbroker.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
     end
-    elk-broker.vm.provision :shell, path: "provision.sh", keep_color: "true"
-    elk-broker.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
-    elk-broker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-broker-nodes"'
-    elk-broker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-broker-nodes"'
+    elkbroker.vm.provision :shell, path: "provision.sh", keep_color: "true"
+    elkbroker.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
+    elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elkbroker-nodes"'
+    elkbroker.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elkbroker-nodes"'
   end
-  config.vm.define "elk-es" do |elk-es|
-    elk-es.vm.box = "mrlesmithjr/trusty64"
-    elk-es.vm.hostname = "elk-es"
+  config.vm.define "elkes" do |elkes|
+    elkes.vm.box = "mrlesmithjr/trusty64"
+    elkes.vm.hostname = "elkes"
 
-    elk-es.vm.network :private_network, ip: "192.168.202.201"
-    elk-es.vm.network "forwarded_port", guest: 9200, host: 9200
+    elkes.vm.network :private_network, ip: "192.168.202.201"
+    elkes.vm.network "forwarded_port", guest: 9200, host: 9200
 
-    elk-es.vm.provider "virtualbox" do |vb|
+    elkes.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
     end
-    elk-es.vm.provision :shell, path: "provision.sh", keep_color: "true"
-    elk-es.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
-    elk-es.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elk-es-nodes"'
-    elk-es.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elk-es-nodes"'
+    elkes.vm.provision :shell, path: "provision.sh", keep_color: "true"
+    elkes.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
+    elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack-core.yml --limit "elkes-nodes"'
+    elkes.vm.provision :shell, inline: 'ansible-playbook -i /vagrant/hosts -c local /vagrant/elkstack.yml --limit "elkes-nodes"'
   end
 end
