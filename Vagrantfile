@@ -12,6 +12,7 @@ Vagrant.configure(2) do |config|
 
     elkbroker.vm.network :private_network, ip: "192.168.202.200"
     elkbroker.vm.network :forwarded_port, guest: 5600, host: 5600
+    elkbroker.vm.network :forwarded_port, guest: 6379, host: 6379
 
     elkbroker.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
@@ -41,6 +42,9 @@ Vagrant.configure(2) do |config|
     elkpreprocessor.vm.hostname = "elk-pre-processor"
 
     elkpreprocessor.vm.network :private_network, ip: "192.168.202.202"
+    elkpreprocessor.vm.network :forwarded_port, guest: 3515, host: 3515
+    elkpreprocessor.vm.network :forwarded_port, guest: 10514, host: 10514
+
 
     elkpreprocessor.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
