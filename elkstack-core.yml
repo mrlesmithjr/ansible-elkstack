@@ -3,7 +3,7 @@
 - name: Configure Common Roles on ELK-Nodes
   hosts: elk-nodes
   remote_user: remote
-  sudo: true
+  become: true
   roles:
     - role: ansible-network-tweaks
     - role: ansible-ntp
@@ -15,7 +15,7 @@
 - name: Configure ELK-Broker-Nodes
   hosts: elk-broker-nodes
   remote_user: remote
-  sudo: true
+  become: true
   roles:
     - role: ansible-redis
       when: use_redis is defined and use_redis
@@ -26,14 +26,19 @@
 - name: Configure ELK-ES-Nodes
   hosts: elk-es-nodes
   remote_user: remote
-  sudo: true
+  become: true
   roles:
     - role: ansible-elasticsearch
 
 - name: Configure ELK-Processor-Nodes
   hosts: elk-processor-nodes
   remote_user: remote
-  sudo: true
+  become: true
+  vars:
+    - es_plugin_install: install
+    - es_plugin_list: list
+    - es_version: 2.x
+    - logstash_version: 2.0
   roles:
     - role: ansible-elasticsearch
     - role: ansible-logstash
@@ -42,7 +47,9 @@
 - name: Configure ELK-Pre-Processor-Nodes
   hosts: elk-pre-processor-nodes
   remote_user: remote
-  sudo: true
+  become: true
+  vars:
+    - logstash_version: 2.0
   roles:
     - role: ansible-logstash
     - role: ansible-dnsmasq
@@ -50,7 +57,9 @@
 - name: Configure ELK-Haproxy-Nodes
   hosts: elk-haproxy-nodes
   remote_user: remote
-  sudo: true
+  become: true
+  vars:
+    - logstash_version: 2.0
   roles:
     - role: ansible-logstash
     - role: ansible-keepalived
