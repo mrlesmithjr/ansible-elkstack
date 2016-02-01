@@ -11,6 +11,14 @@
     - role: ansible-rsyslog
     - role: ansible-snmpd
     - role: ansible-timezone
+  tasks:
+    - name: updating /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: ".*{{ item }}$"
+        line: "{{ hostvars[item].ansible_ssh_host }} {{ item }} {{ item }}.{{ pri_domain_name }}"
+        state: present
+      with_items: groups['all']    
 
 - name: Configure ELK-Broker-Nodes
   hosts: elk-broker-nodes
@@ -18,6 +26,7 @@
   become: true
   vars:
     - es_allow_remote_connections: true  #defines if remote connections should be allowed....version 2.x
+    - es_config_unicast: true  #defines if unicast discovery should be configured...ES 2.x
     - es_plugin_install: install
     - es_plugin_list: list
     - es_version: 2.x
@@ -34,6 +43,7 @@
   become: true
   vars:
     - es_allow_remote_connections: true  #defines if remote connections should be allowed....version 2.x
+    - es_config_unicast: true  #defines if unicast discovery should be configured...ES 2.x
     - es_plugin_install: install
     - es_plugin_list: list
     - es_version: 2.x
@@ -46,6 +56,7 @@
   become: true
   vars:
     - es_allow_remote_connections: true  #defines if remote connections should be allowed....version 2.x
+    - es_config_unicast: true  #defines if unicast discovery should be configured...ES 2.x
     - es_plugin_install: install
     - es_plugin_list: list
     - es_version: 2.x
