@@ -27,6 +27,11 @@
   hosts: elk-es-nodes
   remote_user: remote
   become: true
+  vars:
+    - es_allow_remote_connections: true  #defines if remote connections should be allowed....version 2.x
+    - es_plugin_install: install
+    - es_plugin_list: list
+    - es_version: 2.x
   roles:
     - role: ansible-elasticsearch
 
@@ -35,6 +40,7 @@
   remote_user: remote
   become: true
   vars:
+    - es_allow_remote_connections: true  #defines if remote connections should be allowed....version 2.x
     - es_plugin_install: install
     - es_plugin_list: list
     - es_version: 2.x
