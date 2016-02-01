@@ -11,6 +11,7 @@ Vagrant.configure(2) do |config|
     elkbroker.vm.hostname = "elk-broker"
 
     elkbroker.vm.network :private_network, ip: "192.168.202.200"
+    elkbroker.vm.network :forwarded_port, guest: 5600, host: 5600
 
     elkbroker.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
@@ -25,7 +26,7 @@ Vagrant.configure(2) do |config|
     elkes.vm.hostname = "elk-es"
 
     elkes.vm.network :private_network, ip: "192.168.202.201"
-    elkes.vm.network "forwarded_port", guest: 9200, host: 9200
+    elkes.vm.network :forwarded_port, guest: 9200, host: 9200
 
     elkes.vm.provider "virtualbox" do |vb|
       vb.memory = "2048"
