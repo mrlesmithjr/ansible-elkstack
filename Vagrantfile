@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
     elkbroker.vm.network :forwarded_port, guest: 6379, host: 6379
 
     elkbroker.vm.provider "virtualbox" do |vb|
-      vb.memory = "1024"
+      vb.memory = "2048"
     end
     elkbroker.vm.provision :shell, path: "provision.sh", keep_color: "true"
     elkbroker.vm.provision :shell, inline: 'ansible-galaxy install -r /vagrant/requirements.yml -f'
