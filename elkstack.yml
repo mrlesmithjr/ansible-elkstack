@@ -24,7 +24,7 @@
   vars:
     - logstash_outputs:
         - output: elasticsearch
-          host: '192.168.202.201'
+          hosts: '192.168.202.201:9200'
           protocol: http  #node, transport or http....http is the only protocol supported in 2.x+
           flush_size: 5000
           workers: 2
